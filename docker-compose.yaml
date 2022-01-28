@@ -7,7 +7,7 @@ volumes:
 services:
   pihole:
     container_name: pihole
-    image: cbcrowe/pihole-unbound:latest
+    image: ghcr.io/zigapovhe/docker-pihole-unbound:master
     hostname: ${HOSTNAME}
     domainname: ${DOMAIN_NAME}
     ports:
@@ -19,7 +19,7 @@ services:
       # - 5335:5335/tcp # Uncomment to enable unbound access on local server
       # - 22/tcp # Uncomment to enable SSH
     environment:
-      ServerIP: ${ServerIP}
+      FTLCONF_REPLY_ADDR4: ${SERVER_IP}
       TZ: ${TZ}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       WEBUIBOXEDLAYOUT: ${WEBUIBOXEDLAYOUT}
