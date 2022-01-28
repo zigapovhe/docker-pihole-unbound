@@ -1,4 +1,4 @@
-version: '2'
+version: '3.7'
 
 volumes:
   etc_pihole-unbound:
@@ -14,20 +14,33 @@ services:
       - 443:443/tcp
       - 53:53/tcp
       - 53:53/udp
+      - 67:67/udp # Only required if you are using Pi-hole as your DHCP server
       - 80:80/tcp
       # - 5335:5335/tcp # Uncomment to enable unbound access on local server
       # - 22/tcp # Uncomment to enable SSH
     environment:
       ServerIP: ${ServerIP}
       TZ: ${TZ}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      WEBUIBOXEDLAYOUT: ${WEBUIBOXEDLAYOUT}
+      WEBTHEME: ${WEBTHEME}
+      TEMPERATUREUNIT: c
       WEBPASSWORD: ${WEBPASSWORD}
       REV_SERVER: ${REV_SERVER}
       REV_SERVER_TARGET: ${REV_SERVER_TARGET}
       REV_SERVER_DOMAIN: ${REV_SERVER_DOMAIN}
       REV_SERVER_CIDR: ${REV_SERVER_CIDR}
-      DNS1: 127.0.0.1#5335 # Hardcoded to our Unbound server
-      DNS2: 127.0.0.1#5335 # Hardcoded to our Unbound server
+      DHCP_ACTIVE: ${DHCP_ACTIVE} #DHCP Server
+      DHCP_START: ${DHCP_START}
+      DHCP_END: ${DHCP_END}
+      DHCP_ROUTER: ${DHCP_ROUTER}
+      DHCP_LEASETIME: ${DHCP_LEASETIME}
+      DHCP_IPv6: ${DHCP_IPV6}
+      PIHOLE_DNS_: 127.0.0.1#5335 # Hardcoded to our Unbound server
       DNSSEC: "true" # Enable DNSSEC
+      DNS_BOGUS_PRIV: "true" #Never forward reverse lookups for private ranges
+      DNS_FQDN_REQUIRED: "true" #Never forward non-FQDNs
+      
     volumes:
       - etc_pihole-unbound:/etc/pihole:rw
       - etc_pihole_dnsmasq-unbound:/etc/dnsmasq.d:rw
