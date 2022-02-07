@@ -10,14 +10,6 @@ services:
     image: ghcr.io/zigapovhe/docker-pihole-unbound:master
     hostname: ${HOSTNAME}
     domainname: ${DOMAIN_NAME}
-    ports:
-      - 443:443/tcp
-      - 53:53/tcp
-      - 53:53/udp
-      - 67:67/udp # Only required if you are using Pi-hole as your DHCP server
-      - 80:80/tcp
-      # - 5335:5335/tcp # Uncomment to enable unbound access on local server
-      # - 22/tcp # Uncomment to enable SSH
     environment:
       FTLCONF_REPLY_ADDR4: ${SERVER_IP}
       TZ: ${TZ}
@@ -45,5 +37,12 @@ services:
       - etc_pihole-unbound:/etc/pihole:rw
       - etc_pihole_dnsmasq-unbound:/etc/dnsmasq.d:rw
       - '${UNBOUND_CONFIG_MOUNT}'
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN  
+      - NET_RAW
+      - SYS_NICE
+    network_mode: "host"
     restart: unless-stopped
 
